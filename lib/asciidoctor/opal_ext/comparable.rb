@@ -15,13 +15,13 @@ module Comparable
     `cmp > 0`
   end
 
-  def >= other 
+  def >= other
     unless cmp = (self <=> other)
       raise ArgumentError, "comparison of #{self.class} with #{other.class} failed"
     end
     `cmp >= 0`
   end
-  
+
   def < other
     unless cmp = (self <=> other)
       raise ArgumentError, "comparison of #{self.class} with #{other.class} failed"

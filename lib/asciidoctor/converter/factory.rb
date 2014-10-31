@@ -139,7 +139,7 @@ module Asciidoctor
         end
         nil
       end
-    
+
       # Public: Lookup the custom converter registered with this factory to handle
       # the specified backend.
       #
@@ -189,27 +189,27 @@ module Asciidoctor
             return converter
           end
         end
-    
+
         base_converter = case backend
-        when 'html5'
-          unless defined? ::Asciidoctor::Converter::Html5Converter
-            require 'asciidoctor/converter/html5'.to_s
-          end
-          Html5Converter.new backend, opts
-        when 'docbook5'
-          unless defined? ::Asciidoctor::Converter::DocBook5Converter
-            require 'asciidoctor/converter/docbook5'.to_s
-          end
-          DocBook5Converter.new backend, opts
-        when 'docbook45'
-          unless defined? ::Asciidoctor::Converter::DocBook45Converter
-            require 'asciidoctor/converter/docbook45'.to_s
-          end
-          DocBook45Converter.new backend, opts
-        end
+                           when 'html5'
+                             unless defined? ::Asciidoctor::Converter::Html5Converter
+                               require 'asciidoctor/converter/html5'.to_s
+                             end
+                             Html5Converter.new backend, opts
+                           when 'docbook5'
+                             unless defined? ::Asciidoctor::Converter::DocBook5Converter
+                               require 'asciidoctor/converter/docbook5'.to_s
+                             end
+                             DocBook5Converter.new backend, opts
+                           when 'docbook45'
+                             unless defined? ::Asciidoctor::Converter::DocBook45Converter
+                               require 'asciidoctor/converter/docbook45'.to_s
+                             end
+                             DocBook45Converter.new backend, opts
+                         end
 
         return base_converter unless opts.key? :template_dirs
-    
+
         unless defined? ::Asciidoctor::Converter::TemplateConverter
           require 'asciidoctor/converter/template'.to_s
         end

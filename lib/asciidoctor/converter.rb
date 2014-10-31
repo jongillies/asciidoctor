@@ -53,7 +53,9 @@ module Asciidoctor
       # Returns nothing
       def register_for *backends
         Factory.register self, backends
-        metaclass = class << self; self; end
+        metaclass = class << self;
+          self;
+        end
         if backends == ['*']
           metaclass.send :define_method, :converts? do |name|
             true
@@ -85,10 +87,10 @@ module Asciidoctor
           syntax = 'html'
         end
         {
-          'basebackend' => base,
-          'outfilesuffix' => ext,
-          'filetype' => type,
-          'htmlsyntax' => syntax
+            'basebackend' => base,
+            'outfilesuffix' => ext,
+            'filetype' => type,
+            'htmlsyntax' => syntax
         }
       end
 
@@ -135,7 +137,7 @@ module Asciidoctor
         converter.extend Config
       end
     end
-  
+
     include Config
     include BackendInfo
 
@@ -216,7 +218,7 @@ module Asciidoctor
         # ensure there's a trailing endline to be nice to terminals
         target.write EOL
       else
-        ::File.open(target, 'w') {|f| f.write output }
+        ::File.open(target, 'w') { |f| f.write output }
       end
       nil
     end

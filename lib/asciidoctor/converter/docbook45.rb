@@ -34,20 +34,20 @@ module Asciidoctor
     def inline_anchor node
       target = node.target
       case node.type
-      when :ref
-        %(<anchor#{common_attributes target, nil, node.text}/>)
-      when :xref
-        if node.attr? 'path', nil
-          linkend = (node.attr 'fragment') || target
-          (text = node.text) ? %(<link linkend="#{linkend}">#{text}</link>) : %(<xref linkend="#{linkend}"/>)
-        else
-          text = node.text || (node.attr 'path')
-          %(<ulink url="#{target}">#{text}</ulink>)
-        end
-      when :link
-        %(<ulink url="#{target}">#{node.text}</ulink>)
-      when :bibref
-        %(<anchor#{common_attributes target, nil, "[#{target}]"}/>[#{target}])
+        when :ref
+          %(<anchor#{common_attributes target, nil, node.text}/>)
+        when :xref
+          if node.attr? 'path', nil
+            linkend = (node.attr 'fragment') || target
+            (text = node.text) ? %(<link linkend="#{linkend}">#{text}</link>) : %(<xref linkend="#{linkend}"/>)
+          else
+            text = node.text || (node.attr 'path')
+            %(<ulink url="#{target}">#{text}</ulink>)
+          end
+        when :link
+          %(<ulink url="#{target}">#{node.text}</ulink>)
+        when :bibref
+          %(<anchor#{common_attributes target, nil, "[#{target}]"}/>[#{target}])
       end
     end
 

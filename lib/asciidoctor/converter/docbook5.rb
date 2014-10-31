@@ -43,10 +43,10 @@ module Asciidoctor
     def section node
       doctype = node.document.doctype
       tag_name = if node.special
-        node.level <= 1 ? node.sectname : 'section'
-      else
-        doctype == 'book' && node.level <= 1 ? (node.level == 0 ? 'part' : 'chapter') : 'section'
-      end
+                   node.level <= 1 ? node.sectname : 'section'
+                 else
+                   doctype == 'book' && node.level <= 1 ? (node.level == 0 ? 'part' : 'chapter') : 'section'
+                 end
       if doctype == 'manpage'
         if tag_name == 'section'
           tag_name = 'refsection'
@@ -83,25 +83,25 @@ module Asciidoctor
     end
 
     DLIST_TAGS = {
-      'labeled' => {
-        :list  => 'variablelist',
-        :entry => 'varlistentry',
-        :term  => 'term',
-        :item  => 'listitem'
-      },
-      'qanda' => {
-        :list  => 'qandaset',
-        :entry => 'qandaentry',
-        :label => 'question',
-        :term  => 'simpara',
-        :item  => 'answer'
-      },
-      'glossary' => {
-        :list  => nil,
-        :entry => 'glossentry',
-        :term  => 'glossterm',
-        :item  => 'glossdef'
-      }
+        'labeled' => {
+            :list => 'variablelist',
+            :entry => 'varlistentry',
+            :term => 'term',
+            :item => 'listitem'
+        },
+        'qanda' => {
+            :list => 'qandaset',
+            :entry => 'qandaentry',
+            :label => 'question',
+            :term => 'simpara',
+            :item => 'answer'
+        },
+        'glossary' => {
+            :list => nil,
+            :entry => 'glossentry',
+            :term => 'glossterm',
+            :item => 'glossdef'
+        }
     }
     DLIST_TAGS.default = DLIST_TAGS['labeled']
 
@@ -253,7 +253,7 @@ module Asciidoctor
       if node.style == 'latexmath'
         equation_data = %(<alt><![CDATA[#{equation}]]></alt>
 <mediaobject><textobject><phrase></phrase></textobject></mediaobject>)
-      # asciimath
+        # asciimath
       else
         # DocBook backends can't handle AsciiMath, so output raw expression in text object
         equation_data = %(<mediaobject><textobject><phrase><![CDATA[#{equation}]]></phrase></textobject></mediaobject>)
@@ -288,26 +288,26 @@ module Asciidoctor
 
     def open node
       case node.style
-      when 'abstract'
-        if node.parent == node.document && node.document.attr?('doctype', 'book')
-          warn 'asciidoctor: WARNING: abstract block cannot be used in a document without a title when doctype is book. Excluding block content.'
-          ''
-        else
-          %(<abstract>
+        when 'abstract'
+          if node.parent == node.document && node.document.attr?('doctype', 'book')
+            warn 'asciidoctor: WARNING: abstract block cannot be used in a document without a title when doctype is book. Excluding block content.'
+            ''
+          else
+            %(<abstract>
 #{title_tag node}#{resolve_content node}
 </abstract>)
-        end
-      when 'partintro'
-        unless node.level == 0 && node.parent.context == :section && node.document.doctype == 'book'
-          warn 'asciidoctor: ERROR: partintro block can only be used when doctype is book and it\'s a child of a part section. Excluding block content.'
-          ''
-        else
-          %(<partintro#{common_attributes node.id, node.role, node.reftext}>
+          end
+        when 'partintro'
+          unless node.level == 0 && node.parent.context == :section && node.document.doctype == 'book'
+            warn 'asciidoctor: ERROR: partintro block can only be used when doctype is book and it\'s a child of a part section. Excluding block content.'
+            ''
+          else
+            %(<partintro#{common_attributes node.id, node.role, node.reftext}>
 #{title_tag node}#{resolve_content node}
 </partintro>)
-        end
-      else
-        node.content
+          end
+        else
+          node.content
       end
     end
 
@@ -383,7 +383,7 @@ module Asciidoctor
       node.columns.each do |col|
         result << %(<colspec colname="col_#{col.attr 'colnumber'}" colwidth="#{col.attr(width ? 'colabswidth' : 'colpcwidth')}*"/>)
       end
-      TABLE_SECTIONS.select {|tblsec| !node.rows[tblsec].empty? }.each do |tblsec|
+      TABLE_SECTIONS.select { |tblsec| !node.rows[tblsec].empty? }.each do |tblsec|
         has_body = true if tblsec == :body
         result << %(<t#{tblsec}>)
         node.rows[tblsec].each do |row|
@@ -396,21 +396,21 @@ module Asciidoctor
             # NOTE <entry> may not have whitespace (e.g., line breaks) as a direct descendant according to DocBook rules
             entry_start = %(<entry#{halign_attribute}#{valign_attribute}#{colspan_attribute}#{rowspan_attribute}>)
             cell_content = if tblsec == :head
-              cell.text
-            else
-              case cell.style
-              when :asciidoc
-                cell.content
-              when :verse
-                %(<literallayout>#{cell.text}</literallayout>)
-              when :literal
-                %(<literallayout class="monospaced">#{cell.text}</literallayout>)
-              when :header
-                cell.content.map {|text| %(<simpara><emphasis role="strong">#{text}</emphasis></simpara>) }.join
-              else
-                cell.content.map {|text| %(<simpara>#{text}</simpara>) }.join
-              end
-            end
+                             cell.text
+                           else
+                             case cell.style
+                               when :asciidoc
+                                 cell.content
+                               when :verse
+                                 %(<literallayout>#{cell.text}</literallayout>)
+                               when :literal
+                                 %(<literallayout class="monospaced">#{cell.text}</literallayout>)
+                               when :header
+                                 cell.content.map { |text| %(<simpara><emphasis role="strong">#{text}</emphasis></simpara>) }.join
+                               else
+                                 cell.content.map { |text| %(<simpara>#{text}</simpara>) }.join
+                             end
+                           end
             entry_end = (node.document.attr? 'cellbgcolor') ? %(<?dbfo bgcolor="#{node.document.attr 'cellbgcolor'}"?></entry>) : '</entry>'
             result << %(#{entry_start}#{cell_content}#{entry_end})
           end
@@ -446,10 +446,10 @@ module Asciidoctor
         result << %(<title>#{node.title}</title>) if node.title?
         node.items.each do |item|
           text_marker = if checklist && (item.attr? 'checkbox')
-            (item.attr? 'checked') ? '&#10003; ' : '&#10063; '
-          else
-            nil
-          end
+                          (item.attr? 'checked') ? '&#10003; ' : '&#10063; '
+                        else
+                          nil
+                        end
           result << '<listitem>'
           result << %(<simpara>#{text_marker}#{item.text}</simpara>)
           result << item.content if item.blocks?
@@ -484,21 +484,21 @@ module Asciidoctor
 
     def inline_anchor node
       case node.type
-      when :ref
-        %(<anchor#{common_attributes node.target, nil, node.text}/>)
-      when :xref
-        if node.attr? 'path', nil
-          linkend = (node.attr 'fragment') || node.target
-          (text = node.text) ? %(<link linkend="#{linkend}">#{text}</link>) : %(<xref linkend="#{linkend}"/>)
+        when :ref
+          %(<anchor#{common_attributes node.target, nil, node.text}/>)
+        when :xref
+          if node.attr? 'path', nil
+            linkend = (node.attr 'fragment') || node.target
+            (text = node.text) ? %(<link linkend="#{linkend}">#{text}</link>) : %(<xref linkend="#{linkend}"/>)
+          else
+            %(<link xlink:href="#{target}">#{node.text || (node.attr 'path')}</link>)
+          end
+        when :link
+          %(<link xlink:href="#{node.target}">#{node.text}</link>)
+        when :bibref
+          %(<anchor#{common_attributes node.target, nil, "[#{node.target}]"}/>[#{node.target}])
         else
-          %(<link xlink:href="#{target}">#{node.text || (node.attr 'path')}</link>)
-        end
-      when :link
-        %(<link xlink:href="#{node.target}">#{node.text}</link>)
-      when :bibref
-        %(<anchor#{common_attributes node.target, nil, "[#{node.target}]"}/>[#{node.target}])
-      else
-        warn %(asciidoctor: WARNING: unknown anchor type: #{node.type.inspect})
+          warn %(asciidoctor: WARNING: unknown anchor type: #{node.type.inspect})
       end
     end
 
@@ -560,7 +560,7 @@ module Asciidoctor
       if (keys = node.attr 'keys').size == 1
         %(<keycap>#{keys[0]}</keycap>)
       else
-        key_combo = keys.map {|key| %(<keycap>#{key}</keycap>) }.join
+        key_combo = keys.map { |key| %(<keycap>#{key}</keycap>) }.join
         %(<keycombo>#{key_combo}</keycombo>)
       end
     end
@@ -568,7 +568,7 @@ module Asciidoctor
     def inline_menu node
       menu = node.attr 'menu'
       if !(submenus = node.attr 'submenus').empty?
-        submenu_path = submenus.map {|submenu| %(<guisubmenu>#{submenu}</guisubmenu> ) }.join.chop
+        submenu_path = submenus.map { |submenu| %(<guisubmenu>#{submenu}</guisubmenu> ) }.join.chop
         %(<menuchoice><guimenu>#{menu}</guimenu> #{submenu_path} <guimenuitem>#{node.attr 'menuitem'}</guimenuitem></menuchoice>)
       elsif (menuitem = node.attr 'menuitem')
         %(<menuchoice><guimenu>#{menu}</guimenu> <guimenuitem>#{menuitem}</guimenuitem></menuchoice>)
@@ -578,14 +578,14 @@ module Asciidoctor
     end
 
     QUOTE_TAGS = {
-      :emphasis    => ['<emphasis>',               '</emphasis>',    true],
-      :strong      => ['<emphasis role="strong">', '</emphasis>',    true],
-      :monospaced  => ['<literal>',                '</literal>',     false],
-      :superscript => ['<superscript>',            '</superscript>', false],
-      :subscript   => ['<subscript>',              '</subscript>',   false],
-      :double      => ['&#8220;',                  '&#8221;',        true],
-      :single      => ['&#8216;',                  '&#8217;',        true],
-      :mark        => ['<emphasis role="marked">', '</emphasis>',    false]
+        :emphasis => ['<emphasis>', '</emphasis>', true],
+        :strong => ['<emphasis role="strong">', '</emphasis>', true],
+        :monospaced => ['<literal>', '</literal>', false],
+        :superscript => ['<superscript>', '</superscript>', false],
+        :subscript => ['<subscript>', '</subscript>', false],
+        :double => ['&#8220;', '&#8221;', true],
+        :single => ['&#8216;', '&#8217;', true],
+        :mark => ['<emphasis role="marked">', '</emphasis>', false]
     }
     QUOTE_TAGS.default = [nil, nil, true]
 

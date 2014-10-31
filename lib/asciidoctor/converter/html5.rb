@@ -3,19 +3,19 @@ module Asciidoctor
   # consistent with the html5 backend from AsciiDoc Python.
   class Converter::Html5Converter < Converter::BuiltIn
     QUOTE_TAGS = {
-      :emphasis    => ['<em>',     '</em>',     true],
-      :strong      => ['<strong>', '</strong>', true],
-      :monospaced  => ['<code>',   '</code>',   true],
-      :superscript => ['<sup>',    '</sup>',    true],
-      :subscript   => ['<sub>',    '</sub>',    true],
-      :double      => ['&#8220;',  '&#8221;',   false],
-      :single      => ['&#8216;',  '&#8217;',   false],
-      :mark        => ['<mark>',   '</mark>',   true],
-      :asciimath   => ['\\$',      '\\$',       false],
-      :latexmath   => ['\\(',      '\\)',       false]
-      # Opal can't resolve these constants when referenced here
-      #:asciimath   => INLINE_MATH_DELIMITERS[:asciimath] + [false],
-      #:latexmath   => INLINE_MATH_DELIMITERS[:latexmath] + [false]
+        :emphasis => ['<em>', '</em>', true],
+        :strong => ['<strong>', '</strong>', true],
+        :monospaced => ['<code>', '</code>', true],
+        :superscript => ['<sup>', '</sup>', true],
+        :subscript => ['<sub>', '</sub>', true],
+        :double => ['&#8220;', '&#8221;', false],
+        :single => ['&#8216;', '&#8217;', false],
+        :mark => ['<mark>', '</mark>', true],
+        :asciimath => ['\\$', '\\$', false],
+        :latexmath => ['\\(', '\\)', false]
+        # Opal can't resolve these constants when referenced here
+        #:asciimath   => INLINE_MATH_DELIMITERS[:asciimath] + [false],
+        #:latexmath   => INLINE_MATH_DELIMITERS[:latexmath] + [false]
     }
     QUOTE_TAGS.default = [nil, nil, nil]
 
@@ -48,7 +48,7 @@ module Asciidoctor
       result << %(<meta name="author" content="#{node.attr 'authors'}"#{slash}>) if node.attr? 'authors'
       result << %(<meta name="copyright" content="#{node.attr 'copyright'}"#{slash}>) if node.attr? 'copyright'
 
-      result << %(<title>#{node.doctitle :sanitize => true, :use_fallback => true}</title>) 
+      result << %(<title>#{node.doctitle :sanitize => true, :use_fallback => true}</title>)
       if DEFAULT_STYLESHEET_KEYS.include?(node.attr 'stylesheet')
         if (webfonts = node.attr 'webfonts')
           result << %(<link rel="stylesheet" href="#{asset_uri_scheme}//fonts.googleapis.com/css?family=#{webfonts.empty? ? 'Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400' : webfonts}"#{slash}>)
@@ -78,31 +78,31 @@ module Asciidoctor
       end
 
       case node.attr 'source-highlighter'
-      when 'coderay'
-        if (node.attr 'coderay-css', 'class') == 'class'
-          if linkcss
-            result << %(<link rel="stylesheet" href="#{node.normalize_web_path @stylesheets.coderay_stylesheet_name, (node.attr 'stylesdir', '')}"#{slash}>)
-          else
-            result << @stylesheets.embed_coderay_stylesheet
+        when 'coderay'
+          if (node.attr 'coderay-css', 'class') == 'class'
+            if linkcss
+              result << %(<link rel="stylesheet" href="#{node.normalize_web_path @stylesheets.coderay_stylesheet_name, (node.attr 'stylesdir', '')}"#{slash}>)
+            else
+              result << @stylesheets.embed_coderay_stylesheet
+            end
           end
-        end
-      when 'pygments'
-        if (node.attr 'pygments-css', 'class') == 'class'
-          pygments_style = node.attr 'pygments-style'
-          if linkcss
-            result << %(<link rel="stylesheet" href="#{node.normalize_web_path @stylesheets.pygments_stylesheet_name(pygments_style), (node.attr 'stylesdir', '')}"#{slash}>)
-          else
-            result << (@stylesheets.embed_pygments_stylesheet pygments_style)
+        when 'pygments'
+          if (node.attr 'pygments-css', 'class') == 'class'
+            pygments_style = node.attr 'pygments-style'
+            if linkcss
+              result << %(<link rel="stylesheet" href="#{node.normalize_web_path @stylesheets.pygments_stylesheet_name(pygments_style), (node.attr 'stylesdir', '')}"#{slash}>)
+            else
+              result << (@stylesheets.embed_pygments_stylesheet pygments_style)
+            end
           end
-        end
-      when 'highlightjs', 'highlight.js'
-        highlightjs_path = node.attr 'highlightjsdir', %(#{cdn_base}/highlight.js/8.1)
-        result << %(<link rel="stylesheet" href="#{highlightjs_path}/styles/#{node.attr 'highlightjs-theme', 'github'}.min.css"#{slash}>
+        when 'highlightjs', 'highlight.js'
+          highlightjs_path = node.attr 'highlightjsdir', %(#{cdn_base}/highlight.js/8.1)
+          result << %(<link rel="stylesheet" href="#{highlightjs_path}/styles/#{node.attr 'highlightjs-theme', 'github'}.min.css"#{slash}>
 <script src="#{highlightjs_path}/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>)
-      when 'prettify'
-        prettify_path = node.attr 'prettifydir', %(#{cdn_base}/prettify/r298)
-        result << %(<link rel="stylesheet" href="#{prettify_path}/#{node.attr 'prettify-theme', 'prettify'}.min.css"#{slash}>
+        when 'prettify'
+          prettify_path = node.attr 'prettifydir', %(#{cdn_base}/prettify/r298)
+          result << %(<link rel="stylesheet" href="#{prettify_path}/#{node.attr 'prettify-theme', 'prettify'}.min.css"#{slash}>
 <script src="#{prettify_path}/prettify.min.js"></script>
 <script>document.addEventListener('DOMContentLoaded', prettyPrint)</script>)
       end
@@ -310,8 +310,8 @@ MathJax.Hub.Config({
       else
         class_attr = (role = node.role) ? %( class="sect#{slevel} #{role}") : %( class="sect#{slevel}")
         sectnum = if node.numbered && !node.caption && slevel <= (node.document.attr 'sectnumlevels', 3).to_i
-          %(#{node.sectnum} )
-        end
+                    %(#{node.sectnum} )
+                  end
         %(<div#{class_attr}>
 <#{htag}#{id_attr}>#{anchor}#{link_start}#{sectnum}#{node.captioned_title}#{link_end}</#{htag}>
 #{slevel == 1 ? %[<div class="sectionbody">\n#{node.content}\n</div>] : node.content}
@@ -324,14 +324,14 @@ MathJax.Hub.Config({
       name = node.attr 'name'
       title_element = node.title? ? %(<div class="title">#{node.title}</div>\n) : nil
       caption = if node.document.attr? 'icons'
-        if node.document.attr? 'icons', 'font'
-          %(<i class="fa icon-#{name}" title="#{node.caption}"></i>)
-        else
-          %(<img src="#{node.icon_uri name}" alt="#{node.caption}"#{@void_element_slash}>)
-        end
-      else
-        %(<div class="title">#{node.caption}</div>)
-      end
+                  if node.document.attr? 'icons', 'font'
+                    %(<i class="fa icon-#{name}" title="#{node.caption}"></i>)
+                  else
+                    %(<img src="#{node.icon_uri name}" alt="#{node.caption}"#{@void_element_slash}>)
+                  end
+                else
+                  %(<div class="title">#{node.caption}</div>)
+                end
       %(<div#{id_attr} class="admonitionblock #{name}#{(role = node.role) && " #{role}"}">
 <table>
 <tr>
@@ -377,10 +377,10 @@ Your browser does not support the audio tag.
         node.items.each_with_index do |item, i|
           num = i + 1
           num_element = if font_icons
-            %(<i class="conum" data-value="#{num}"></i><b>#{num}</b>)
-          else
-            %(<img src="#{node.icon_uri "callouts/#{num}"}" alt="#{num}"#{@void_element_slash}>)
-          end
+                          %(<i class="conum" data-value="#{num}"></i><b>#{num}</b>)
+                        else
+                          %(<img src="#{node.icon_uri "callouts/#{num}"}" alt="#{num}"#{@void_element_slash}>)
+                        end
           result << %(<tr>
 <td>#{num_element}</td>
 <td>#{item.text}</td>
@@ -407,78 +407,78 @@ Your browser does not support the audio tag.
       id_attribute = node.id ? %( id="#{node.id}") : nil
 
       classes = case node.style
-      when 'qanda'
-        ['qlist', 'qanda', node.role]
-      when 'horizontal'
-        ['hdlist', node.role]
-      else
-        ['dlist', node.style, node.role]
-      end.compact
+                  when 'qanda'
+                    ['qlist', 'qanda', node.role]
+                  when 'horizontal'
+                    ['hdlist', node.role]
+                  else
+                    ['dlist', node.style, node.role]
+                end.compact
 
       class_attribute = %( class="#{classes * ' '}")
 
       result << %(<div#{id_attribute}#{class_attribute}>)
       result << %(<div class="title">#{node.title}</div>) if node.title?
       case node.style
-      when 'qanda'
-        result << '<ol>'
-        node.items.each do |terms, dd|
-          result << '<li>'
-          [*terms].each do |dt|
-            result << %(<p><em>#{dt.text}</em></p>)
+        when 'qanda'
+          result << '<ol>'
+          node.items.each do |terms, dd|
+            result << '<li>'
+            [*terms].each do |dt|
+              result << %(<p><em>#{dt.text}</em></p>)
+            end
+            if dd
+              result << %(<p>#{dd.text}</p>) if dd.text?
+              result << dd.content if dd.blocks?
+            end
+            result << '</li>'
           end
-          if dd
-            result << %(<p>#{dd.text}</p>) if dd.text?
-            result << dd.content if dd.blocks?
+          result << '</ol>'
+        when 'horizontal'
+          slash = @void_element_slash
+          result << '<table>'
+          if (node.attr? 'labelwidth') || (node.attr? 'itemwidth')
+            result << '<colgroup>'
+            col_style_attribute = (node.attr? 'labelwidth') ? %( style="width: #{(node.attr 'labelwidth').chomp '%'}%;") : nil
+            result << %(<col#{col_style_attribute}#{slash}>)
+            col_style_attribute = (node.attr? 'itemwidth') ? %( style="width: #{(node.attr 'itemwidth').chomp '%'}%;") : nil
+            result << %(<col#{col_style_attribute}#{slash}>)
+            result << '</colgroup>'
           end
-          result << '</li>'
-        end
-        result << '</ol>'
-      when 'horizontal'
-        slash = @void_element_slash
-        result << '<table>'
-        if (node.attr? 'labelwidth') || (node.attr? 'itemwidth')
-          result << '<colgroup>'
-          col_style_attribute = (node.attr? 'labelwidth') ? %( style="width: #{(node.attr 'labelwidth').chomp '%'}%;") : nil
-          result << %(<col#{col_style_attribute}#{slash}>)
-          col_style_attribute = (node.attr? 'itemwidth') ? %( style="width: #{(node.attr 'itemwidth').chomp '%'}%;") : nil
-          result << %(<col#{col_style_attribute}#{slash}>)
-          result << '</colgroup>'
-        end
-        node.items.each do |terms, dd|
-          result << '<tr>'
-          result << %(<td class="hdlist1#{(node.option? 'strong') ? ' strong' : nil}">)
-          terms_array = [*terms]
-          last_term = terms_array[-1]
-          terms_array.each do |dt|
-            result << dt.text
-            result << %(<br#{slash}>) if dt != last_term
+          node.items.each do |terms, dd|
+            result << '<tr>'
+            result << %(<td class="hdlist1#{(node.option? 'strong') ? ' strong' : nil}">)
+            terms_array = [*terms]
+            last_term = terms_array[-1]
+            terms_array.each do |dt|
+              result << dt.text
+              result << %(<br#{slash}>) if dt != last_term
+            end
+            result << '</td>'
+            result << '<td class="hdlist2">'
+            if dd
+              result << %(<p>#{dd.text}</p>) if dd.text?
+              result << dd.content if dd.blocks?
+            end
+            result << '</td>'
+            result << '</tr>'
           end
-          result << '</td>'
-          result << '<td class="hdlist2">'
-          if dd
-            result << %(<p>#{dd.text}</p>) if dd.text?
-            result << dd.content if dd.blocks?
+          result << '</table>'
+        else
+          result << '<dl>'
+          dt_style_attribute = node.style ? nil : ' class="hdlist1"'
+          node.items.each do |terms, dd|
+            [*terms].each do |dt|
+              result << %(<dt#{dt_style_attribute}>#{dt.text}</dt>)
+            end
+            if dd
+              result << '<dd>'
+              result << %(<p>#{dd.text}</p>) if dd.text?
+              result << dd.content if dd.blocks?
+              result << '</dd>'
+            end
           end
-          result << '</td>'
-          result << '</tr>'
-        end
-        result << '</table>'
-      else
-        result << '<dl>'
-        dt_style_attribute = node.style ? nil : ' class="hdlist1"'
-        node.items.each do |terms, dd|
-          [*terms].each do |dt|
-            result << %(<dt#{dt_style_attribute}>#{dt.text}</dt>)
-          end
-          if dd
-            result << '<dd>'
-            result << %(<p>#{dd.text}</p>) if dd.text?
-            result << dd.content if dd.blocks?
-            result << '</dd>'
-          end
-        end
-        result << '</dl>'
+          result << '</dl>'
       end
 
       result << '</div>'
@@ -505,11 +505,11 @@ Your browser does not support the audio tag.
 
     def image node
       align = (node.attr? 'align') ? (node.attr 'align') : nil
-      float = (node.attr? 'float') ? (node.attr 'float') : nil 
+      float = (node.attr? 'float') ? (node.attr 'float') : nil
       style_attribute = if align || float
-        styles = [align ? %(text-align: #{align}) : nil, float ? %(float: #{float}) : nil].compact
-        %( style="#{styles * ';'}")
-      end
+                          styles = [align ? %(text-align: #{align}) : nil, float ? %(float: #{float}) : nil].compact
+                          %( style="#{styles * ';'}")
+                        end
 
       width_attribute = (node.attr? 'width') ? %( width="#{node.attr 'width'}") : nil
       height_attribute = (node.attr? 'height') ? %( height="#{node.attr 'height'}") : nil
@@ -539,22 +539,22 @@ Your browser does not support the audio tag.
           code_attrs = nil
         end
         case node.document.attr 'source-highlighter'
-        when 'coderay'
-          pre_class = %( class="CodeRay highlight#{nowrap ? ' nowrap' : nil}")
-        when 'pygments'
-          pre_class = %( class="pygments highlight#{nowrap ? ' nowrap' : nil}")
-        when 'highlightjs', 'highlight.js'
-          pre_class = %( class="highlightjs highlight#{nowrap ? ' nowrap' : nil}")
-          code_attrs = %( class="language-#{language}"#{code_attrs}) if language
-        when 'prettify'
-          pre_class = %( class="prettyprint highlight#{nowrap ? ' nowrap' : nil}#{(node.attr? 'linenums') ? ' linenums' : nil}")
-          code_attrs = %( class="language-#{language}"#{code_attrs}) if language
-        when 'html-pipeline'
-          pre_class = language ? %( lang="#{language}") : nil
-          code_attrs = nil
-        else
-          pre_class = %( class="highlight#{nowrap ? ' nowrap' : nil}")
-          code_attrs = %( class="language-#{language}"#{code_attrs}) if language
+          when 'coderay'
+            pre_class = %( class="CodeRay highlight#{nowrap ? ' nowrap' : nil}")
+          when 'pygments'
+            pre_class = %( class="pygments highlight#{nowrap ? ' nowrap' : nil}")
+          when 'highlightjs', 'highlight.js'
+            pre_class = %( class="highlightjs highlight#{nowrap ? ' nowrap' : nil}")
+            code_attrs = %( class="language-#{language}"#{code_attrs}) if language
+          when 'prettify'
+            pre_class = %( class="prettyprint highlight#{nowrap ? ' nowrap' : nil}#{(node.attr? 'linenums') ? ' linenums' : nil}")
+            code_attrs = %( class="language-#{language}"#{code_attrs}) if language
+          when 'html-pipeline'
+            pre_class = language ? %( lang="#{language}") : nil
+            code_attrs = nil
+          else
+            pre_class = %( class="highlight#{nowrap ? ' nowrap' : nil}")
+            code_attrs = %( class="language-#{language}"#{code_attrs}) if language
         end
         pre_start = %(<pre#{pre_class}><code#{code_attrs}>)
         pre_end = '</code></pre>'
@@ -591,7 +591,7 @@ Your browser does not support the audio tag.
       unless ((equation = node.content).start_with? open) && (equation.end_with? close)
         equation = %(#{open}#{equation}#{close})
       end
-      
+
       %(<div#{id_attribute} class="#{(role = node.role) ? ['stemblock', role] * ' ' : 'stemblock'}">
 #{title_element}<div class="content">
 #{equation}
@@ -642,8 +642,8 @@ Your browser does not support the audio tag.
         warn 'asciidoctor: ERROR: partintro block can only be used when doctype is book and it\'s a child of a book part. Excluding block content.'
         ''
       else
-          id_attr = node.id ? %( id="#{node.id}") : nil
-          title_el = node.title? ? %(<div class="title">#{node.title}</div>) : nil
+        id_attr = node.id ? %( id="#{node.id}") : nil
+        title_el = node.title? ? %(<div class="title">#{node.title}</div>) : nil
         %(<div#{id_attr} class="openblock#{style && style != 'open' ? " #{style}" : ''}#{(role = node.role) && " #{role}"}">
 #{title_el}<div class="content">
 #{node.content}
@@ -658,16 +658,16 @@ Your browser does not support the audio tag.
 
     def paragraph node
       attributes = if node.id
-        if node.role
-          %( id="#{node.id}" class="paragraph #{node.role}")
-        else
-          %( id="#{node.id}" class="paragraph")
-        end
-      elsif node.role
-        %( class="paragraph #{node.role}")
-      else
-        ' class="paragraph"'
-      end
+                     if node.role
+                       %( id="#{node.id}" class="paragraph #{node.role}")
+                     else
+                       %( id="#{node.id}" class="paragraph")
+                     end
+                   elsif node.role
+                     %( class="paragraph #{node.role}")
+                   else
+                     ' class="paragraph"'
+                   end
 
       if node.title?
         %(<div#{attributes}>
@@ -683,11 +683,11 @@ Your browser does not support the audio tag.
 
     def preamble node
       toc = if (node.attr? 'toc') && (node.attr? 'toc-placement', 'preamble')
-        %(\n<div id="toc" class="#{node.attr 'toc-class', 'toc'}">
+              %(\n<div id="toc" class="#{node.attr 'toc-class', 'toc'}">
 <div id="toctitle">#{node.attr 'toc-title'}</div>
 #{outline node.document}
 </div>)
-      end
+            end
 
       %(<div id="preamble">
 <div class="sectionbody">
@@ -733,7 +733,7 @@ Your browser does not support the audio tag.
     end
 
     def table node
-      result = [] 
+      result = []
       id_attribute = node.id ? %( id="#{node.id}") : nil
       classes = ['tableblock', %(frame-#{node.attr 'frame', 'all'}), %(grid-#{node.attr 'grid', 'all'})]
       styles = []
@@ -767,7 +767,7 @@ Your browser does not support the audio tag.
           end
         end
         result << '</colgroup>'
-        [:head, :foot, :body].select {|tsec| !node.rows[tsec].empty? }.each do |tsec|
+        [:head, :foot, :body].select { |tsec| !node.rows[tsec].empty? }.each do |tsec|
           result << %(<t#{tsec}>)
           node.rows[tsec].each do |row|
             result << '<tr>'
@@ -776,17 +776,17 @@ Your browser does not support the audio tag.
                 cell_content = cell.text
               else
                 case cell.style
-                when :asciidoc
-                  cell_content = %(<div>#{cell.content}</div>)
-                when :verse
-                  cell_content = %(<div class="verse">#{cell.text}</div>)
-                when :literal
-                  cell_content = %(<div class="literal"><pre>#{cell.text}</pre></div>)
-                else
-                  cell_content = ''
-                  cell.content.each do |text|
-                    cell_content = %(#{cell_content}<p class="tableblock">#{text}</p>)
-                  end
+                  when :asciidoc
+                    cell_content = %(<div>#{cell.content}</div>)
+                  when :verse
+                    cell_content = %(<div class="verse">#{cell.text}</div>)
+                  when :literal
+                    cell_content = %(<div class="literal"><pre>#{cell.text}</pre></div>)
+                  else
+                    cell_content = ''
+                    cell.content.each do |text|
+                      cell_content = %(#{cell_content}<p class="tableblock">#{text}</p>)
+                    end
                 end
               end
 
@@ -904,39 +904,39 @@ Your browser does not support the audio tag.
       width_attribute = (node.attr? 'width') ? %( width="#{node.attr 'width'}") : nil
       height_attribute = (node.attr? 'height') ? %( height="#{node.attr 'height'}") : nil
       case node.attr 'poster'
-      when 'vimeo'
-        start_anchor = (node.attr? 'start') ? "#at=#{node.attr 'start'}" : nil
-        delimiter = '?'
-        autoplay_param = (node.option? 'autoplay') ? "#{delimiter}autoplay=1" : nil
-        delimiter = '&amp;' if autoplay_param
-        loop_param = (node.option? 'loop') ? "#{delimiter}loop=1" : nil
-        %(<div#{id_attribute}#{class_attribute}>#{title_element}
+        when 'vimeo'
+          start_anchor = (node.attr? 'start') ? "#at=#{node.attr 'start'}" : nil
+          delimiter = '?'
+          autoplay_param = (node.option? 'autoplay') ? "#{delimiter}autoplay=1" : nil
+          delimiter = '&amp;' if autoplay_param
+          loop_param = (node.option? 'loop') ? "#{delimiter}loop=1" : nil
+          %(<div#{id_attribute}#{class_attribute}>#{title_element}
 <div class="content">
 <iframe#{width_attribute}#{height_attribute} src="//player.vimeo.com/video/#{node.attr 'target'}#{start_anchor}#{autoplay_param}#{loop_param}" frameborder="0"#{(node.option? 'nofullscreen') ? nil : (append_boolean_attribute 'allowfullscreen', xml)}></iframe>
 </div>
 </div>)
-      when 'youtube'
-        start_param = (node.attr? 'start') ? "&amp;start=#{node.attr 'start'}" : nil
-        end_param = (node.attr? 'end') ? "&amp;end=#{node.attr 'end'}" : nil
-        autoplay_param = (node.option? 'autoplay') ? '&amp;autoplay=1' : nil
-        loop_param = (node.option? 'loop') ? '&amp;loop=1' : nil
-        controls_param = (node.option? 'nocontrols') ? '&amp;controls=0' : nil
-        # parse video/playlist syntax where playlist is optional
-        target, list = (node.attr 'target').split '/', 2
-        if (list ||= (node.attr 'list'))
-          list_param = %(&amp;list=#{list})
-        else
-          list_param = nil
-        end
-        %(<div#{id_attribute}#{class_attribute}>#{title_element}
+        when 'youtube'
+          start_param = (node.attr? 'start') ? "&amp;start=#{node.attr 'start'}" : nil
+          end_param = (node.attr? 'end') ? "&amp;end=#{node.attr 'end'}" : nil
+          autoplay_param = (node.option? 'autoplay') ? '&amp;autoplay=1' : nil
+          loop_param = (node.option? 'loop') ? '&amp;loop=1' : nil
+          controls_param = (node.option? 'nocontrols') ? '&amp;controls=0' : nil
+          # parse video/playlist syntax where playlist is optional
+          target, list = (node.attr 'target').split '/', 2
+          if (list ||= (node.attr 'list'))
+            list_param = %(&amp;list=#{list})
+          else
+            list_param = nil
+          end
+          %(<div#{id_attribute}#{class_attribute}>#{title_element}
 <div class="content">
 <iframe#{width_attribute}#{height_attribute} src="//www.youtube.com/embed/#{target}?rel=0#{start_param}#{end_param}#{autoplay_param}#{loop_param}#{controls_param}#{list_param}" frameborder="0"#{(node.option? 'nofullscreen') ? nil : (append_boolean_attribute 'allowfullscreen', xml)}></iframe>
 </div>
 </div>)
-      else 
-        poster_attribute = %(#{poster = node.attr 'poster'}).empty? ? nil : %( poster="#{node.media_uri poster}")
-        time_anchor = ((node.attr? 'start') || (node.attr? 'end')) ? %(#t=#{node.attr 'start'}#{(node.attr? 'end') ? ',' : nil}#{node.attr 'end'}) : nil
-        %(<div#{id_attribute}#{class_attribute}>#{title_element}
+        else
+          poster_attribute = %(#{poster = node.attr 'poster'}).empty? ? nil : %( poster="#{node.media_uri poster}")
+          time_anchor = ((node.attr? 'start') || (node.attr? 'end')) ? %(#t=#{node.attr 'start'}#{(node.attr? 'end') ? ',' : nil}#{node.attr 'end'}) : nil
+          %(<div#{id_attribute}#{class_attribute}>#{title_element}
 <div class="content">
 <video src="#{node.media_uri(node.attr 'target')}#{time_anchor}"#{width_attribute}#{height_attribute}#{poster_attribute}#{(node.option? 'autoplay') ? (append_boolean_attribute 'autoplay', xml) : nil}#{(node.option? 'nocontrols') ? nil : (append_boolean_attribute 'controls', xml)}#{(node.option? 'loop') ? (append_boolean_attribute 'loop', xml) : nil}>
 Your browser does not support the video tag.
@@ -949,27 +949,27 @@ Your browser does not support the video tag.
     def inline_anchor node
       target = node.target
       case node.type
-      when :xref
-        refid = (node.attr 'refid') || target
-        # NOTE we lookup text in converter because DocBook doesn't need this logic
-        text = node.text || (node.document.references[:ids][refid] || %([#{refid}]))
-        # FIXME shouldn't target be refid? logic seems confused here
-        %(<a href="#{target}">#{text}</a>)
-      when :ref
-        %(<a id="#{target}"></a>)
-      when :link
-        attrs = []
-        attrs << %( id="#{node.id}") if node.id
-        if (role = node.role)
-          attrs << %( class="#{role}")
-        end
-        attrs << %( title="#{node.attr 'title'}") if node.attr? 'title'
-        attrs << %( target="#{node.attr 'window'}") if node.attr? 'window'
-        %(<a href="#{target}"#{attrs.join}>#{node.text}</a>)
-      when :bibref
-        %(<a id="#{target}"></a>[#{target}])
-      else
-        warn %(asciidoctor: WARNING: unknown anchor type: #{node.type.inspect})
+        when :xref
+          refid = (node.attr 'refid') || target
+          # NOTE we lookup text in converter because DocBook doesn't need this logic
+          text = node.text || (node.document.references[:ids][refid] || %([#{refid}]))
+          # FIXME shouldn't target be refid? logic seems confused here
+          %(<a href="#{target}">#{text}</a>)
+        when :ref
+          %(<a id="#{target}"></a>)
+        when :link
+          attrs = []
+          attrs << %( id="#{node.id}") if node.id
+          if (role = node.role)
+            attrs << %( class="#{role}")
+          end
+          attrs << %( title="#{node.attr 'title'}") if node.attr? 'title'
+          attrs << %( target="#{node.attr 'window'}") if node.attr? 'window'
+          %(<a href="#{target}"#{attrs.join}>#{node.text}</a>)
+        when :bibref
+          %(<a id="#{target}"></a>[#{target}])
+        else
+          warn %(asciidoctor: WARNING: unknown anchor type: #{node.type.inspect})
       end
     end
 
@@ -1024,7 +1024,7 @@ Your browser does not support the video tag.
       else
         resolved_target = (type == 'icon') ? (node.icon_uri node.target) : (node.image_uri node.target)
 
-        attrs = ['alt', 'width', 'height', 'title'].map {|name|
+        attrs = ['alt', 'width', 'height', 'title'].map { |name|
           (node.attr? name) ? %( #{name}="#{node.attr name}") : nil
         }.join
 
@@ -1050,7 +1050,7 @@ Your browser does not support the video tag.
       if (keys = node.attr 'keys').size == 1
         %(<kbd>#{keys[0]}</kbd>)
       else
-        key_combo = keys.map {|key| %(<kbd>#{key}</kbd>+) }.join.chop
+        key_combo = keys.map { |key| %(<kbd>#{key}</kbd>+) }.join.chop
         %(<span class="keyseq">#{key_combo}</span>)
       end
     end
@@ -1058,7 +1058,7 @@ Your browser does not support the video tag.
     def inline_menu node
       menu = node.attr 'menu'
       if !(submenus = node.attr 'submenus').empty?
-        submenu_path = submenus.map {|submenu| %(<span class="submenu">#{submenu}</span>&#160;&#9656; ) }.join.chop
+        submenu_path = submenus.map { |submenu| %(<span class="submenu">#{submenu}</span>&#160;&#9656; ) }.join.chop
         %(<span class="menuseq"><span class="menu">#{menu}</span>&#160;&#9656; #{submenu_path} <span class="menuitem">#{node.attr 'menuitem'}</span></span>)
       elsif (menuitem = node.attr 'menuitem')
         %(<span class="menuseq"><span class="menu">#{menu}</span>&#160;&#9656; <span class="menuitem">#{menuitem}</span></span>)

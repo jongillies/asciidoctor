@@ -108,11 +108,11 @@ Example: asciidoctor -b html5 source.asciidoc
             self[:destination_dir] = dest_dir
           end
           opts.on('-IDIRECTORY', '--load-path LIBRARY', 'add a directory to the $LOAD_PATH',
-              'may be specified more than once') do |path|
+                  'may be specified more than once') do |path|
             (self[:load_paths] ||= []).concat(path.split ::File::PATH_SEPARATOR)
           end
           opts.on('-rLIBRARY', '--require LIBRARY', 'require the specified library before executing the processor (using require)',
-              'may be specified more than once') do |path|
+                  'may be specified more than once') do |path|
             (self[:requires] ||= []).concat(path.split ',')
           end
           opts.on('-q', '--quiet', 'suppress warnings (default: false)') do |verbose|
@@ -138,12 +138,12 @@ Example: asciidoctor -b html5 source.asciidoc
             $stdout.puts %(Runtime Environment (#{RUBY_DESCRIPTION}))
             return 0
           end
-          
+
         end
 
         infiles = []
         opts_parser.parse! args
-        
+
         if args.empty?
           if self[:verbose] == 2
             $stdout.puts %(Asciidoctor #{::Asciidoctor::VERSION} [http://asciidoctor.org])
@@ -158,28 +158,27 @@ Example: asciidoctor -b html5 source.asciidoc
         # shave off the file to process so that options errors appear correctly
         if args.size == 1 && args[0] == '-'
           infiles.push args.pop
-        elsif
-          args.each do |file|
-            if file == '-' || (file.start_with? '-')
-              # warn, but don't panic; we may have enough to proceed, so we won't force a failure
-              $stderr.puts "asciidoctor: WARNING: extra arguments detected (unparsed arguments: #{args.map{|a| "'#{a}'"} * ', '}) or incorrect usage of stdin"
+        elsif args.each do |file|
+          if file == '-' || (file.start_with? '-')
+            # warn, but don't panic; we may have enough to proceed, so we won't force a failure
+            $stderr.puts "asciidoctor: WARNING: extra arguments detected (unparsed arguments: #{args.map { |a| "'#{a}'" } * ', '}) or incorrect usage of stdin"
+          else
+            if ::File.readable? file
+              matches = [file]
             else
-              if ::File.readable? file
-                matches = [file]
-              else
-                # Tilt backslashes in Windows paths the Ruby-friendly way
-                if ::File::ALT_SEPARATOR == '\\' && (file.include? '\\')
-                  file = file.tr '\\', '/'
-                end
-                if (matches = ::Dir.glob file).empty?
-                  $stderr.puts %(asciidoctor: FAILED: input file #{file} missing or cannot be read)
-                  return 1
-                end
+              # Tilt backslashes in Windows paths the Ruby-friendly way
+              if ::File::ALT_SEPARATOR == '\\' && (file.include? '\\')
+                file = file.tr '\\', '/'
               end
-
-              infiles.concat matches
+              if (matches = ::Dir.glob file).empty?
+                $stderr.puts %(asciidoctor: FAILED: input file #{file} missing or cannot be read)
+                return 1
+              end
             end
+
+            infiles.concat matches
           end
+        end
         end
 
         infiles.each do |file|

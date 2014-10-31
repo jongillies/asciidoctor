@@ -24,17 +24,17 @@ module Asciidoctor
   # safe. If this gem is not present, a warning is issued.
   class Converter::TemplateConverter < Converter::Base
     DEFAULT_ENGINE_OPTIONS = {
-      :erb =>  { :trim => '<' },
-      # TODO line 466 of haml/compiler.rb sorts the attributes; file an issue to make this configurable
-      # NOTE AsciiDoc syntax expects HTML/XML output to use double quotes around attribute values
-      :haml => { :format => :xhtml, :attr_wrapper => '"', :ugly => true, :escape_attrs => false },
-      :slim => { :disable_escape => true, :sort_attrs => false, :pretty => false }
+        :erb => {:trim => '<'},
+        # TODO line 466 of haml/compiler.rb sorts the attributes; file an issue to make this configurable
+        # NOTE AsciiDoc syntax expects HTML/XML output to use double quotes around attribute values
+        :haml => {:format => :xhtml, :attr_wrapper => '"', :ugly => true, :escape_attrs => false},
+        :slim => {:disable_escape => true, :sort_attrs => false, :pretty => false}
     }
 
     # QUESTION are we handling how we load the thread_safe support correctly?
     begin
       require 'thread_safe' unless defined? ::ThreadSafe
-      @caches = { :scans => ::ThreadSafe::Cache.new, :templates => ::ThreadSafe::Cache.new }
+      @caches = {:scans => ::ThreadSafe::Cache.new, :templates => ::ThreadSafe::Cache.new}
     rescue ::LoadError
       @caches = {}
       # FIXME perhaps only warn if the cache option is enabled?
@@ -67,12 +67,12 @@ module Asciidoctor
       end
       @engine_options[:haml][:format] = @engine_options[:slim][:format] = :html5 if opts[:htmlsyntax] == 'html'
       case opts[:template_cache]
-      when true
-        @caches = self.class.caches
-      when ::Hash
-        @caches = opts[:template_cache]
-      else
-        @caches = {}
+        when true
+          @caches = self.class.caches
+        when ::Hash
+          @caches = opts[:template_cache]
+        else
+          @caches = {}
       end
       scan
       #create_handlers
@@ -234,10 +234,10 @@ module Asciidoctor
     # Returns the Tilt template object
     def register name, template
       @templates[name] = if (template_cache = @caches[:templates])
-        template_cache[template.file] = template
-      else
-        template
-      end
+                           template_cache[template.file] = template
+                         else
+                           template
+                         end
       #create_handler name, template
     end
 
@@ -249,7 +249,7 @@ module Asciidoctor
       result = {}
       eruby_loaded = nil
       # Grab the files in the top level of the directory (do not recurse)
-      ::Dir.glob(pattern).select {|match| ::File.file? match }.each do |file|
+      ::Dir.glob(pattern).select { |match| ::File.file? match }.each do |file|
         if (basename = ::File.basename file) == 'helpers.rb' || (path_segments = basename.split '.').size < 2
           next
         end
@@ -298,7 +298,7 @@ module Asciidoctor
         [::Tilt::ERBTemplate, {}]
       elsif name == 'erubis'
         Helpers.require_library 'erubis' unless defined? ::Erubis::FastEruby
-        [::Tilt::ErubisTemplate, { :engine_class => ::Erubis::FastEruby }]
+        [::Tilt::ErubisTemplate, {:engine_class => ::Erubis::FastEruby}]
       else
         raise ::ArgumentError, %(Unknown ERB implementation: #{name})
       end

@@ -32,12 +32,12 @@ module Asciidoctor
 
         old_verbose = $VERBOSE
         case @options[:verbose]
-        when 0
-          $VERBOSE = nil
-        when 1
-          $VERBOSE = false
-        when 2
-          $VERBOSE = true
+          when 0
+            $VERBOSE = nil
+          when 1
+            $VERBOSE = false
+          when 2
+            $VERBOSE = true
         end
 
         opts = {}
@@ -46,19 +46,19 @@ module Asciidoctor
         tofile = nil
         @options.map do |key, val|
           case key
-          when :input_files
-            infiles = val
-          when :output_file
-            outfile = val
-          when :destination_dir
-            opts[:to_dir] = val if val
-          when :attributes
-            # NOTE processor will dup attributes internally
-            opts[:attributes] = val
-          when :trace
-            # currently, nothing
-          else
-            opts[key] = val unless val.nil?
+            when :input_files
+              infiles = val
+            when :output_file
+              outfile = val
+            when :destination_dir
+              opts[:to_dir] = val if val
+            when :attributes
+              # NOTE processor will dup attributes internally
+              opts[:attributes] = val
+            when :trace
+              # currently, nothing
+            else
+              opts[key] = val unless val.nil?
           end
         end
 
@@ -66,7 +66,7 @@ module Asciidoctor
           # allows use of block to supply stdin, particularly useful for tests
           inputs = [block_given? ? yield : STDIN]
         else
-          inputs = infiles.map {|infile| ::File.new infile, 'r'}
+          inputs = infiles.map { |infile| ::File.new infile, 'r' }
         end
 
         # NOTE if infile is stdin, default to outfile as stout
